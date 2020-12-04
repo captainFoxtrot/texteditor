@@ -1,7 +1,7 @@
 #include "file.h"
 
 bool file_open(file_t* f, char n[]){
-    
+
     FILE* newfile;
 
     if((newfile = fopen(n, READWRITE))){
@@ -54,7 +54,7 @@ bool file_readcontents(file_t* f){
     f->contents = newptr;
 
     f->storedLen = len;
-    
+
     f->allocatedChunks = REQUIRED_CHUNKS(len);
 
     return true;
@@ -74,7 +74,7 @@ bool file_writecontents(file_t* f){
 
         f->contents,
         sizeof(char),
-        f->storedLen, 
+        f->storedLen,
         f->file
 
     ) < f->storedLen){ return false; }
@@ -139,7 +139,7 @@ bool file_insertchar(file_t* f, int p, int c){
 bool file_deletechar(file_t* f, int p){
 
     // Return false if p is out of range
-    if(p < 0 || p >= f->storedLen) return false;
+    if(p < 0 || p > f->storedLen) return false;
 
     bool bufferShrinked = false;
     char originalChar;
@@ -189,7 +189,7 @@ bool file_update_lineend_positions(file_t* f){
     int currAllocatedChunks = 0;
 
     // Allocate a CHUNKSIZE to start
-    if(!(newptr = malloc(CHUNKSIZE))){
+    if(!(newptr = malloc(CHUNKSIZE * sizeof(int)))){
         return false;
     } else ++currAllocatedChunks;
 
@@ -200,11 +200,11 @@ bool file_update_lineend_positions(file_t* f){
     for(int i = 0; i <= f->storedLen; i++){
 
         // If character = newline or char after last character, then
-        if((f->contents)[i] == NEWLINE || i == f->storedLen){
+        if(((f->contents)[i] == NEWLINE) || (i == f->storedLen)){
 
             // Increment current line
             ++currLine;
-            
+
             // If we need more memory, then
             if(currLine >= (currAllocatedChunks * CHUNKSIZE)){
                 // Try to allocate another CHUNKSIZE of memory
@@ -255,7 +255,7 @@ bool file_extend_contentsbuffer(file_t* f){
 
     // Store the new pointer to the contents
     f->contents = newptr;
-    
+
     return true;
 }
 
@@ -281,6 +281,6 @@ bool file_shrink_contentsbuffer(file_t* f){
 
     // Store the new pointer to the contents
     f->contents = newptr;
-    
+
     return true;
 }

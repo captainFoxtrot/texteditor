@@ -14,10 +14,11 @@ Disclaimer: I am not responsible should this program corrupt any of your files (
 
 ## Bugs
 
-There are a few bugs and weird behavior that has to be fixed before this has any chance of being used as an actual text editor. Examples:
-- Attempts to open large-ish files (above 2000 chars or so) will fail
-- Program *always* segfaults when closed with Ctrl+C
-- Screen doesn't scroll correctly
+I've cleaned up (some) of the code and fixed the majority of the bugs. However, a few remain persistent:
+- When provided with no args (e.g. start with new file), the program does not display the contents of the code correctly.
+- Newlines at the end of the file cause any number of the following to happen:
+    - The last line is duplicated on the display, but not in memory
+    - The last line cannot be deleted at all
 
 ## Contributing
 

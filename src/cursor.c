@@ -9,7 +9,7 @@ void cursor_move(cursor_t* c, file_t* f, int dir){
     int temp;
     
     // The C preprocessor is awesome.
-    #define col (c->position.col)
+    #define cursor_move_col (c->position.col)
     #define line (c->position.line)
     #define __lineCount (f->lineCount)
     #define curr_linewidth (file_charsInLine(f, line))
@@ -19,9 +19,9 @@ void cursor_move(cursor_t* c, file_t* f, int dir){
         case KEY_UP:
             if(line > 0){
                 --line;
-                if(col >= (temp = curr_linewidth)){
-                    col = temp;
-                }
+                temp = curr_linewidth;
+                if(cursor_move_col >= temp)
+                    cursor_move_col = temp;
             }
             break;
 
@@ -29,28 +29,25 @@ void cursor_move(cursor_t* c, file_t* f, int dir){
             if(line < __lineCount - 1){
                 ++line;
                 temp = curr_linewidth;
-                if(col >= temp){
-                    mvprintw(0, 0, "test");
-                    col = temp;
-                }
+                if(cursor_move_col >= temp) cursor_move_col = temp;
             }
             break;
 
         case KEY_LEFT:
-            if(col > 0){
-                --col;
+            if(cursor_move_col > 0){
+                --cursor_move_col;
             } else if(line > 0){
                 --line;
-                col = curr_linewidth;
+                cursor_move_col = curr_linewidth;
             }
             break;
 
         case KEY_RIGHT:
-            if(col < curr_linewidth){
-                ++col;
+            if(cursor_move_col < curr_linewidth){
+                ++cursor_move_col;
             } else if(line < __lineCount - 1){
                 ++line;
-                col = 0;
+                cursor_move_col = 0;
             }
             break;
     }
@@ -58,5 +55,4 @@ void cursor_move(cursor_t* c, file_t* f, int dir){
     #undef col
     #undef line
     #undef __lineCount
-    #undef curr_numlines
 }
